@@ -52,45 +52,45 @@ reclass_sub_m <- matrix(reclass_sub_df,
                         ncol = 3,
                         byrow = TRUE)
 
-### Rasters for model 1
-m1_layers <- list.files(path = "/nfs/agfrontiers-data/luc_model/brazil_1_project_2018",
-                          pattern = "*.tif",
-                          full.names = TRUE)
+### Rasters for model 2
+m2_layers <- list.files(path = "/nfs/agfrontiers-data/luc_model/brazil_2_project_2018",
+                        pattern = "*.tif",
+                        full.names = TRUE)
 
 ### Data frame of results
 results <- list()
 
 ### Write loop
-for (i in 1:length(m1_layers)) {
+for (i in 1:length(m2_layers)) {
   
   ### Open first raster
-  j_m1 <- raster(m1_layers[i])
-
-  ### Restrict to extent of national forest
-  j_m1 <- crop(j_m1, jaman)
-  j_m1 <- mask(j_m1, jaman)
+  j_m2 <- raster(m2_layers[i])
   
-
+  ### Restrict to extent of national forest
+  j_m2 <- crop(j_m2, jaman)
+  j_m2 <- mask(j_m2, jaman)
+  
+  
   ### Mask cells that were ag in 2008
-  j1_mask_08 <- mask(j_m1, 
+  j2_mask_08 <- mask(j_m2, 
                      jaman_08,
                      inverse = FALSE,
                      maskvalue = 1,
                      updatevalue = 8)
   
   ### Subtract rasters
-  j1_mask_08_sub <- j1_mask_08 - bra_18_rc
+  j2_mask_08_sub <- j2_mask_08 - bra_18_rc
   
   ### Reclassify subtracted raster
-  j1_mask_08_sub_rc <- reclassify(j1_mask_08_sub,
+  j2_mask_08_sub_rc <- reclassify(j2_mask_08_sub,
                                   reclass_sub_m)
   
-  j1_freq <- freq(j1_mask_08_sub_rc)
+  j2_freq <- freq(j2_mask_08_sub_rc)
   
-  results[[i]] <- j1_freq
+  results[[i]] <- j2_freq
   
   removeTmpFiles() # Clean up temp files, if any exist.
-
+  
 }
 
 ### Combine into dataframe. Add a column for which of the 1000 rasters it comes from.
@@ -98,5 +98,5 @@ results_df <- bind_rows(lapply(results, as_tibble), .id = "raster_id")
 
 ### Save dataframe
 write_csv(results_df,
-          "/nfs/agfrontiers-data/luc_model/brazil_1_project_2018_freq.csv")
+          "/nfs/agfrontiers-data/luc_model/brazil_2_project_2018_freq.csv")
 
