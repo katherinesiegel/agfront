@@ -20,9 +20,11 @@ jaman <- st_read("/nfs/agfrontiers-data/Case Study Info/Brazil/JamanBuffer/Jaman
 
 ### Crop LUC maps
 jaman_08 <- crop(bra_2008, jaman)
-jaman_08 <- mask(jaman_08, jaman, filename = '/nfs/agfrontiers-data/Remote Sensing/KS files/jaman_08_mask.tif')
+jaman_08 <- mask(jaman_08, jaman, filename = '/nfs/agfrontiers-data/Remote Sensing/KS files/jaman_08_mask.tif',
+                 overwrite = TRUE)
 jaman_18 <- crop(bra_2018, jaman)
-jaman_18 <- mask(jaman_18, jaman, filename = '/nfs/agfrontiers-data/Remote Sensing/KS files/jaman_18_mask.tif')
+jaman_18 <- mask(jaman_18, jaman, filename = '/nfs/agfrontiers-data/Remote Sensing/KS files/jaman_18_mask.tif',
+                 overwrite = TRUE)
 
 ### Reclassification matrix
 reclass_df <- c(0, 1.5, 0.05,       ## ag
@@ -54,6 +56,8 @@ reclass_sub_m <- matrix(reclass_sub_df,
 m1_layers <- list.files(path = "/nfs/agfrontiers-data/luc_model/brazil_1_project_2018",
                           pattern = "*.tif",
                           full.names = TRUE)
+
+m1_layers <- m1_layers[1:5]
 
 ### Data frame of results
 results <- list()
