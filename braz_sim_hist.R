@@ -33,15 +33,13 @@ bra_18_rc <- reclassify(jaman_18,
                         reclass_m)
 
 ### Reclassification for subtracted rasters
-reclass_sub_df <- c(0, 1.94, 0,       ## other
-                    1.945, 1.955, 1,  ## missed conversion to ag
-                    1.96, 7.93, 0,    ## other
-                    7.94, 7.96, 2,    ## stable ag from 2008
-                    7.97, 9.88, 0,    ## other
-                    9.89, 9.91, 3,    ## incorrectly predicted ag conversion
-                    9.92, 9.94, 0,    ## other
-                    9.945, 9.96, 4,   ## correctly predicted ag conversion
-                    9.97, 15, 0)      
+reclass_sub_df <- c(-0.06, -0.04, 1,  ## missed conversion to ag
+                    -0.11, -0.09, 2,    ## correct forest
+                    -0.4, -0.14, 0,    ## other
+                    0.89, 0.91, 3,    ## incorrectly predicted ag conversion
+                    0.6, 0.86, 0,    ## other
+                    0.94, 0.96, 4)   ## correctly predicted ag conversion
+                        
 reclass_sub_m <- matrix(reclass_sub_df,
                         ncol = 3,
                         byrow = TRUE)
@@ -66,7 +64,7 @@ for (i in 1:length(m1_layers)) {
   
 
   ### Mask cells that were ag in 2008
-  j1_mask_08 <- mask(j1, 
+  j1_mask_08 <- mask(j_m1, 
                      jaman_08,
                      inverse = FALSE,
                      maskvalue = 1,
